@@ -1,0 +1,17 @@
+names: [angular_crab, ascidians_any_species, bivalves_any_species, black_brittle_star,
+  black_clam, blue_mussel, cnidarian_any_species, common_sea_pen, common_sea_urchin,
+  common_sun_star, common_sunstar, common_whelk, coral_any_species, crustacean_any_species,
+  cushin_star, dahlia_anemone, dead_mans_fingers, deep_sea_king_crab, deep_sea_squat_lobster,
+  deep_water_coral, deeplet_sea_anemone, devonshire_cup_coral, dogwhelk, echinoderm_any_species,
+  edible_crab, european_lobster, european_oyster, european_turret_snail, fanshaped_sponge,
+  file_clam, fireworks_anemone, fish_any_species, football_sponge, gastropods_any_species,
+  great_scallop, great_spider_crab, green_spoon_worm, harbour_swimming_crab, henricia_starfish,
+  human_objects, keel_worm, lacy_tubeworm, northern_shrimp, norway_lobster, norwegian_red_sea_cucumber,
+  nothing_here, peacock_featherduster_worm, pelicans_foot, polychaetes_any_species,
+  prawn_cracker_sponge, purple_sun_star, red_cushion_star, red_sea_fan, rosy_feather_star,
+  rough_sea_anemone, rugose_squat_lobster, sand_starfish, sea_loch_anemone, sea_mouse,
+  spiny_squat_lobster, spiny_starfish, sponge_any_species, sugar_starfish, tall_sea_pen,
+  white_sea_urchin, wild_star_sea_pen]
+nc: 66
+train: /usr/src/app/notebooks/output/train.txt
+val: /usr/src/app/notebooks/output/valid.txt
