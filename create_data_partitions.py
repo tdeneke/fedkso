@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from math import floor
 
-TODO: update this according to KSO input data structure
+# TODO: update this according to KSO input data structure
 def splitset(dataset, parts):
     """Partition data into "parts" partitions"""
     n = dataset.shape[0]

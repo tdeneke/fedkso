@@ -13,5 +13,6 @@ names: [angular_crab, ascidians_any_species, bivalves_any_species, black_brittle
   spiny_squat_lobster, spiny_starfish, sponge_any_species, sugar_starfish, tall_sea_pen,
   white_sea_urchin, wild_star_sea_pen]
 nc: 66
-train: /usr/src/app/notebooks/output/train.txt
-val: /usr/src/app/notebooks/output/valid.txt
+train: ../data/input/train.txt
+val: ../data/input/valid.txt
+test: ../data/input/test.txt

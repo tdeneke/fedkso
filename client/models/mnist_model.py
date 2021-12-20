@@ -25,7 +25,8 @@ def create_seed_model():
 	hyp = 'data/hyp.scratch.yaml'
 	data = '../data/koster.yaml' # dataset
 	cfg = ''
-	weights = 'data/yolov5m.pt'
+	# weights = 'data/yolov5m.pt'
+	weights = 'data/yolov5s.pt'
 	
 	# Hyperparameters
 	if isinstance(hyp, str):

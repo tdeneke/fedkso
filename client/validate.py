@@ -1,47 +1,58 @@
 import sys
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
 from data.read_data import read_data
+from utils.general import get_latest_run
+from utils.torch_utils import de_parallel
+from copy import deepcopy
+from models.test import run
+
 import json
 from sklearn import metrics
 import os
+import torch
 import yaml
 import numpy as np
 
-TODO: update this to call the KSO validate/test 
-def validate(model,data):
+# TODO: update this to call the KSO validate/test 
+def validate(ckptf,data):
     print("-- RUNNING VALIDATION --", flush=True)
-
-    # The data, split between train and test sets.
-
-    # Training error (Client validates global model on same data as it trains on.)
-    (x_train, y_train) = read_data(data, trainset=True)
-
-    # Test error (Client has a small dataset set aside for validation)
-    (x_test, y_test) = read_data(data, trainset=False)
      
     try:
-        model_score = model.evaluate(x_train, y_train, verbose=0)
-        print('Training loss:', model_score[0])
-        print('Training accuracy:', model_score[1])
+        # P, R, mAP@.5, mAP@.5-.95, val_loss(box, obj, cls)
+        results, m, _ = run(data=data, weights=ckptf, single_cls=True, \
+            save_dir='data/expv', project='data', name='expv', conf_thres=0.5)
 
-        model_score_test = model.evaluate(x_test, y_test, verbose=0)
-        print('Test loss:', model_score_test[0])
-        print('Test accuracy:', model_score_test[1])
-        y_pred = model.predict(x_test)
-        y_pred = np.argmax(y_pred, axis=1)
-        clf_report = metrics.classification_report(y_test.argmax(axis=-1),y_pred)
+        print('Training accuracy & loss:', results)
+
+        # model_score_test = model.evaluate(x_test, y_test, verbose=0)
+        tresults, tm, _ = run(data=data, weights=ckptf, single_cls=True, \
+            save_dir='data/expt', project='data', name='expt', task='test', conf_thres=0.5)
+
+
+        print('Test accuracy & loss:', tresults)
 
     except Exception as e:
         print("failed to validate the model {}".format(e),flush=True)
         raise
 
+    # P, R, mAP@.5, mAP@.5-.95, val_loss(box, obj, cls)
     report = {
-                "classification_report": clf_report,
-                "training_loss": model_score[0],
-                "training_accuracy": model_score[1],
-                "test_loss": model_score_test[0],
-                "test_accuracy": model_score_test[1],
+                "P": results[0],
+                "R": results[1],
+                "mAP1": results[2],
+                "mAP2": results[3],
+                "box": results[4],
+                "obj": results[5],
+                "cls": results[6],
+                "tP": tresults[0],
+                "tR": tresults[1],
+                "tmAP1": tresults[2],
+                "tmAP2": tresults[3],
+                "tbox": tresults[4],
+                "tobj": tresults[5],
+                "tcls": tresults[6],
             }
 
     print("-- VALIDATION COMPLETE! --", flush=True)
@@ -55,15 +66,29 @@ if __name__ == '__main__':
         except yaml.YAMLError as e:
             raise(e)
 
-    from fedn.utils.kerashelper import KerasHelper
-    helper = KerasHelper()
+    # read and load global weights in the right format
+    from fedn.utils.pytorchhelper import PytorchHelper
+    helper = PytorchHelper()
     weights = helper.load_model(sys.argv[1])
+    for name, param in weights.items():
+        weights[name] = torch.from_numpy(param)
 
+    # get the latest local check point model file
+    ckptf = get_latest_run()
+    if not ckptf: 
+        # ckptf = 'data/yolov5m.pt'
+        ckptf = 'data/yolov5s.pt'
+    
+    # update the latest local check point with global weights
+    # ckpt = torch.load(ckptf, map_location=torch.device('cpu'))
+    ckpt = torch.load(ckptf)
     from models.mnist_model import create_seed_model
     model = create_seed_model()
-    model.set_weights(weights)
-
-    report = validate(model,'../data/mnist.npz')
+    model.load_state_dict(weights, strict=False)  # load
+    ckpt['model'] = deepcopy(de_parallel(model)).half()
+    torch.save(ckpt, ckptf)
+    
+    report = validate(ckptf, '../data/koster.yaml')
 
     with open(sys.argv[2],"w") as fh:
         fh.write(json.dumps(report))

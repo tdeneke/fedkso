@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-TODO: update this according to KSO input structure
+# TODO: update this according to KSO input structure if needed
 def read_data(path, trainset=True):
     """ Helper function to read and preprocess data for training with Keras. """
 
