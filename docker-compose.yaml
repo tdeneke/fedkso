@@ -3,11 +3,12 @@ services:
   client0:
     environment:
       - GET_HOSTS_FROM=dns
-    image: "fedkso-client:latest"
+    image: "fedkso:latest"
     build:
       context: .
     working_dir: /app
     command: /bin/bash -c "fedn run client -in client.yaml"
+    shm_size: 15gb
     volumes:
       - ./data/clients/0:/app/data:ro #mount as READ ONLY
       - ./client.yaml:/app/client.yaml
@@ -19,6 +20,7 @@ services:
       context: .
     working_dir: /app
     command: /bin/bash -c "fedn run client -in client.yaml"
+    shm_size: 15gb
     volumes:
       - ./data/clients/1:/app/data:ro #mount as READ ONLY
       - ./client.yaml:/app/client.yaml

@@ -19,6 +19,7 @@ uvicorn
 streamlit	
 protobuf	
 python-multipart
+tensorflow==2.6.2
 
 # logging -------------------------------------
 tensorboard>=2.4.1

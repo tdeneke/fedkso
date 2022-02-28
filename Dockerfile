@@ -16,7 +16,7 @@ RUN python -m pip install --upgrade pip \
     && pip install --no-cache -r requirements.txt coremltools onnx gsutil notebook \
     && pip install --no-cache -U torch torchvision numpy \
     # RUN pip install -r requirements.txt
-    && pip install --no-cache -e git://github.com/scaleoutsystems/fedn.git@develop#egg=fedn\&subdirectory=fedn
+    && pip install --no-cache -e git://github.com/scaleoutsystems/fedn.git@206c8b0984b0fa6e8b3190e939da77e0edf44401#egg=fedn\&subdirectory=fedn
 
 # Set environment variables
 ENV HOME=/app
